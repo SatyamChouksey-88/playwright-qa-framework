@@ -1,0 +1,504 @@
+HOW TO RUN
+Playwright test suite for the Typescript React Shopping Cart demo app
+57 tests. A full run takes 1-3 minutes, mostly waiting on the live site.
+
+The app under test is a public site on Firebase. It is NOT in this repo and you
+do not need to start it. You do need internet access, or almost everything
+fails.
+
+For what the folders contain, read PROJECT_STRUCTURE.md.
+
+
+-------------------------------------------------------------------------------
+0. IF YOU RECEIVED THIS AS A ZIP
+-------------------------------------------------------------------------------
+
+Extract it anywhere you like - Desktop, home folder, a projects directory. No
+particular location is required, and the path may contain spaces.
+
+Windows (PowerShell):
+    Expand-Archive -Path playwright-qa-framework.zip -DestinationPath .
+
+Mac / Linux:
+    unzip playwright-qa-framework.zip
+
+Then move into the extracted folder:
+
+    cd playwright-qa-framework
+
+The zip has no node_modules and no git history. Step 2 restores the
+dependencies. Everything else you need is already in there.
+
+
+-------------------------------------------------------------------------------
+1. PREREQUISITES
+-------------------------------------------------------------------------------
+
+Node.js 20 or newer, and npm 10 or newer. This is declared in package.json
+under "engines". Verified working on Node 24.15.0 locally and Node 22 in CI.
+
+Check what you have:
+
+    node -v
+    npm -v
+
+If node -v prints v18 or lower, install a newer Node from https://nodejs.org
+(or use nvm) before continuing. Playwright 1.62 does not support Node 18.
+
+You do not need TypeScript, Playwright, or any browser installed globally.
+Steps 2 and 3 handle all of that inside the project folder.
+
+Disk space: about 250 MB. Measured on this project, node_modules is roughly
+70 MB and the Chromium build is the rest. Installing every browser instead of
+just Chromium pushes it past 800 MB, which is why step 3 asks only for
+Chromium.
+
+
+-------------------------------------------------------------------------------
+2. INSTALL DEPENDENCIES
+-------------------------------------------------------------------------------
+
+    npm install
+
+Takes a minute or two. Warnings about deprecated transitive packages are normal
+and can be ignored.
+
+Note: this project uses husky, which installs a git pre-commit hook via the
+"prepare" script. If you extracted from a zip there is no .git folder, so husky
+prints a harmless notice and skips. Nothing is broken.
+
+
+-------------------------------------------------------------------------------
+3. INSTALL THE BROWSER
+-------------------------------------------------------------------------------
+
+Only Chromium is needed - playwright.config.ts defines a single chromium
+project.
+
+Windows or Mac:
+
+    npx playwright install chromium
+
+Linux:
+
+    npx playwright install --with-deps chromium
+
+The difference matters. --with-deps additionally installs Linux system
+libraries (fonts, audio, graphics) that Chromium needs and that a bare Linux or
+Docker image usually lacks. On Windows and Mac those libraries are already part
+of the OS, so --with-deps has nothing useful to do - and on Linux it needs
+sudo, so expect a password prompt.
+
+If you would rather install every browser Playwright supports, drop the
+"chromium" argument. It is a larger download and this suite will not use them.
+
+
+-------------------------------------------------------------------------------
+4. RUN EVERYTHING
+-------------------------------------------------------------------------------
+
+    npm test
+
+A healthy run prints one line per test as it finishes, then a summary. The
+last lines look like this:
+
+      ok 55 [chromium] > tests/performance/large-catalog-render.spec.ts:41:7 > ...
+      ok 56 [chromium] > tests/performance/large-catalog-render.spec.ts:64:7 > ...
+
+      57 passed (2.5m)
+
+What to look for:
+
+  - "57 passed" and nothing else on that line. That is the healthy state.
+  - Zero mentions of "failed" or "flaky".
+  - Total time between roughly 1 and 3 minutes. 2.5m is a typical figure on a
+    normal connection; the tests spend most of that waiting on the live site,
+    not computing.
+
+If you see a number lower than 57 passed plus some skipped, you are probably
+running against the dev environment by accident - check whether TEST_ENV is
+set in your shell. See section 10.
+
+A real reference log from a passing run is committed at
+docs/demo/suite-run.txt, so you can compare output.
+
+
+-------------------------------------------------------------------------------
+5. RUN ONE CATEGORY, OR ONE FILE
+-------------------------------------------------------------------------------
+
+By category (each maps to a folder under tests/):
+
+    npm run test:functional      17 tests - main flows, includes Task 1
+    npm run test:negative        14 tests - error states and edge cases
+    npm run test:boundary         9 tests - price and catalog extremes
+    npm run test:e2e              6 tests - multi-feature journeys
+    npm run test:api              7 tests - products.json, no browser
+    npm run test:performance      4 tests - 100 mocked products
+
+The api category is the fastest way to confirm your setup works, since it needs
+no browser at all.
+
+One file - pass the path to Playwright directly:
+
+    npx playwright test tests/functional/cart-price-validation.spec.ts
+
+That file is the primary assignment scenario (Task 1): find every product priced
+at $10.90 and $14.90, add them all, and verify names, prices, quantities,
+per-line subtotals, total quantity, and the grand total.
+
+One test by name - match on its ID:
+
+    npx playwright test -g "TC-CART-001"
+
+Every test title starts with an ID like TC-CART-001 or TC-NEG-011. The full
+list with descriptions is in docs/test-cases.md.
+
+To see what would run without running it:
+
+    npx playwright test --list
+
+
+-------------------------------------------------------------------------------
+6. VIEW THE HTML REPORT
+-------------------------------------------------------------------------------
+
+Every local run writes a report to playwright-report/. After a run:
+
+    npm run test:report
+
+That starts a small web server and opens the report in your browser. It stays
+in the foreground - press Ctrl+C when you are finished with it.
+
+The report shows all 57 tests grouped by file, with timings. Click any test to
+see its steps. For failures it also carries a screenshot, a video, and a
+Playwright trace - trace, screenshot, and video are configured to be kept only
+when a test fails, so a fully green run has none of them.
+
+If the port is already taken, or you want it on a fixed address:
+
+    npx playwright show-report --host 127.0.0.1 --port 9323
+
+For a preview without running anything, docs/demo/ has screenshots of this
+report from a real passing run.
+
+
+-------------------------------------------------------------------------------
+7. WATCH IT IN A REAL BROWSER
+-------------------------------------------------------------------------------
+
+    npm run test:headed
+
+Opens a visible Chromium window instead of running invisibly. All 57 tests in
+headed mode is a lot of flickering windows, so narrow it down:
+
+    npx playwright test tests/functional/cart-price-validation.spec.ts --headed
+
+Slow it down enough to actually follow:
+
+    npx playwright test -g "TC-CART-001" --headed --workers=1
+
+Two other modes are wired up:
+
+    npm run test:ui        Playwright's interactive UI - pick tests, watch them
+                           run, step through a timeline. Best option for
+                           exploring the suite.
+
+    npm run test:debug     Opens the Playwright Inspector and pauses before each
+                           action so you can step forward manually.
+
+
+-------------------------------------------------------------------------------
+8. RUN IN DOCKER
+-------------------------------------------------------------------------------
+
+docker/Dockerfile uses the official Playwright image, which already contains
+Chromium and its Linux dependencies. Nothing needs installing on the host
+except Docker itself.
+
+Build, from the project root:
+
+    docker build -f docker/Dockerfile -t playwright-qa-framework .
+
+Run the suite:
+
+    docker run --rm playwright-qa-framework
+
+Get the HTML report out of the container onto your machine:
+
+Windows (PowerShell):
+    docker run --rm -v ${PWD}/playwright-report:/app/playwright-report playwright-qa-framework
+
+Mac / Linux:
+    docker run --rm -v "$(pwd)/playwright-report:/app/playwright-report" playwright-qa-framework
+
+Run only one category inside the container:
+
+    docker run --rm playwright-qa-framework npx playwright test tests/api
+
+One thing to know before you upgrade anything: the image tag in the Dockerfile
+must match the @playwright/test version in package.json exactly. Both are
+currently 1.62.0. If they drift, the browsers baked into the image no longer
+match the client and Playwright fails at launch with "Executable doesn't
+exist". That is why package.json pins the version with no ^ range.
+
+
+-------------------------------------------------------------------------------
+9. TRIGGER CI
+-------------------------------------------------------------------------------
+
+GitHub Actions - .github/workflows/playwright.yml
+
+Runs automatically on:
+  - any push to the main or develop branch
+  - any pull request
+  - manual trigger
+
+The automatic path is just:
+
+    git push
+
+Manual trigger, which additionally lets you pick the environment: open the
+repository on GitHub, go to the Actions tab, select "Playwright Tests" in the
+left sidebar, click "Run workflow", choose dev, staging, or prod from the
+dropdown, and confirm. Or from the command line with the GitHub CLI:
+
+    gh workflow run playwright.yml -f environment=prod
+
+The workflow splits the suite across 2 parallel shards, then a third job merges
+the two shard reports into one HTML report. Artifacts, downloadable from the run
+page for 14 days:
+
+    playwright-html-report    the merged report
+    blob-report-0             raw results from shard 1
+    blob-report-1             raw results from shard 2
+
+If you forked or re-hosted this repo, update the status badge URL near the top
+of README.md - it points at the original repository and will otherwise show
+someone else's build status.
+
+Azure DevOps - azure-pipelines.yml
+
+Also provided, triggering on main and develop. It publishes JUnit results and
+the HTML report. Be aware: this pipeline has never actually been executed, only
+written and reviewed, because no Azure DevOps organisation was available.
+Treat it as untested config.
+
+
+-------------------------------------------------------------------------------
+10. POINTING THIS SOMEWHERE ELSE
+-------------------------------------------------------------------------------
+
+Every place a URL, version, or environment-specific value actually lives. This
+list came from grepping the repo, not from memory.
+
+10.1 Which environment to run against
+-------------------------------------
+Name:     TEST_ENV
+Where:    your shell, or .env, or the CI YAML files
+Controls: which block of config/env.ts is used. Defaults to "prod" when unset.
+Values:   dev | staging | prod
+
+    npm run test:dev
+    npm run test:staging
+    npm run test:prod
+
+Or set it directly:
+
+    Windows (PowerShell):   $env:TEST_ENV="staging"; npm test
+    Mac / Linux:            TEST_ENV=staging npm test
+
+10.2 The application URL
+------------------------
+Name:     BASE_URL
+Where:    config/environments/prod.env, staging.env, dev.env (line 1 of each)
+Controls: the site every browser test navigates to. Feeds playwright.config.ts
+          as baseURL, so specs use relative paths like "/products".
+Change to: the root URL of your deployment, no trailing slash.
+          Currently https://react-shopping-cart-67954.firebaseapp.com for prod
+          and staging, http://localhost:3000 for dev.
+          Use http, not https, for a local dev server - a create-react-app dev
+          server does not serve TLS.
+
+10.3 The products API URL
+-------------------------
+Name:     PRODUCTS_API_URL
+Where:    config/environments/*.env (line 2 of each)
+Controls: the endpoint the API tests call directly, and the source used to
+          compute expected values for UI tests.
+Change to: your products JSON endpoint. Must return { "products": [ ... ] }.
+          Currently https://react-shopping-cart-67954.firebaseio.com/products.json
+
+Both BASE_URL and PRODUCTS_API_URL can also be set as real environment
+variables, which take priority over the .env files. See .env.example.
+
+10.4 Fallback defaults, and one non-obvious flag
+------------------------------------------------
+File:     config/env.ts
+Controls: the defaults used when a variable is not set anywhere. The two URL
+          constants are at the top (PRODUCTS_API, HOSTED_APP), and the per-
+          environment map is directly below.
+
+Also in that file is fetchesCatalogOverNetwork, which is true for prod and
+staging and false for dev. This is not decoration. The app's own getProducts()
+branches on NODE_ENV: the deployed build fetches from Firebase, but a locally
+run development build imports a bundled JSON file and makes no HTTP request at
+all. With no request there is nothing for page.route() to intercept, so on dev
+17 mock-based and network-assertion tests skip themselves and print the reason.
+That is why "npm run test:dev" reports 40 passed / 17 skipped rather than 57
+passed - it is correct behaviour, not a failure.
+
+If you point dev at a deployed build rather than a local dev server, set
+fetchesCatalogOverNetwork to true for dev and all 57 will run.
+
+10.5 Test runner behaviour
+--------------------------
+File:     playwright.config.ts
+Controls: timeout (90 s per test), expect timeout (10 s), parallelism, retries
+          (2 in CI, 0 locally), reporters, and trace/screenshot/video capture.
+          Only a chromium project is defined - add firefox or webkit to the
+          projects array if you need cross-browser coverage, and install those
+          browsers first.
+
+The CI vs. local difference keys off the CI environment variable.
+
+10.6 Node version and scripts
+-----------------------------
+File:     package.json
+Controls: "engines" (node >=20, npm >=10) and every npm run shortcut. Also pins
+          @playwright/test to an exact version on purpose - see section 8.
+
+10.7 CI configuration
+---------------------
+File:     .github/workflows/playwright.yml
+Controls: trigger branches (main, develop - line 5), Node version used by the
+          runner (22, set in two places), shard count (line 21), and the
+          TEST_ENV passed to the tests (line 32).
+
+File:     azure-pipelines.yml
+Controls: trigger branches, Node version (22.x), and the testEnvironment
+          variable. It sets CI: 'true' explicitly, because Azure DevOps does not
+          set CI on its own and the JUnit reporter is only enabled when CI is
+          present. Removing that line silently breaks results publishing.
+
+10.8 Docker image version
+-------------------------
+File:     docker/Dockerfile, line 4
+Controls: the base image, currently mcr.microsoft.com/playwright:v1.62.0-jammy.
+Change to: the tag matching whatever @playwright/test version package.json
+          declares. Change both together, always.
+
+10.9 Test data
+--------------
+Folder:   test-data/
+No file in here contains a URL or a hostname, so none of it needs touching to
+retarget an environment. What it does contain:
+
+    price-filters.json       The $10.90 / $14.90 targets for Task 1, plus the
+                             expected display strings. Change targetPrices to
+                             test different prices.
+    boundary-values.json     Edge prices, high quantity, timeout budgets, and
+                             minimumCatalogSize. That last one is a floor, not
+                             an exact count, so upstream catalog growth does not
+                             fail the suite. Raise interactiveTimeoutMs if you
+                             run on very slow hardware.
+    size-codes.json          Size codes the UI filter offers and the codes the
+                             API is permitted to return.
+    mock-products-100.json   Committed 100-product payload for the performance
+                             tests. Regenerate with "npm run data:generate" if
+                             the upstream product shape changes. It clones real
+                             products and preserves their sku values on purpose,
+                             because the app builds image paths from the sku and
+                             an invented one crashes its bundle.
+
+10.10 Diagnostic scripts have their own hardcoded URLs
+------------------------------------------------------
+The standalone scripts in scripts/ do not read config/env.ts - they are
+one-off tools run directly with node, not part of the suite. If you retarget
+the project and want to use them, edit the constant at the top of each:
+
+    scripts/explore.mjs              BASE
+    scripts/probe-error-states.mjs   BASE
+    scripts/probe-filter.mjs         BASE
+    scripts/generate-mock-products.mjs   SOURCE_API
+    scripts/capture-demo.mjs         REPORT_URL (local report server, not the app)
+
+
+-------------------------------------------------------------------------------
+11. TROUBLESHOOTING
+-------------------------------------------------------------------------------
+
+"Executable doesn't exist at ...chrome-win\chrome.exe"
+    The browser binary was never downloaded. Run step 3:
+        npx playwright install chromium
+    If it appears only inside Docker, your Dockerfile image tag and your
+    @playwright/test version have diverged. See section 8.
+
+Everything fails instantly with net::ERR_NAME_NOT_RESOLVED or a navigation
+timeout
+    The suite tests a live public site. Check you have internet, and that a
+    corporate proxy or VPN is not blocking firebaseapp.com and firebaseio.com.
+    Fastest check - this needs no browser at all:
+        npm run test:api
+    If that also fails, it is the network, not the setup.
+
+"npm test" reports 40 passed, 17 skipped instead of 57 passed
+    TEST_ENV is set to dev somewhere - a leftover shell variable or a .env
+    file. This is expected behaviour on dev, not a fault; see section 10.4.
+    To force prod:
+        Windows (PowerShell):   $env:TEST_ENV="prod"; npm test
+        Mac / Linux:            TEST_ENV=prod npm test
+    To clear it instead:
+        Windows (PowerShell):   Remove-Item Env:TEST_ENV
+        Mac / Linux:            unset TEST_ENV
+
+Syntax errors on install or run, or "Unsupported engine"
+    Node is too old. Check with node -v; you need 20 or newer. Playwright 1.62
+    does not run on Node 18.
+
+"npm run test:report" fails, or opens an empty report
+    An empty report means the last run used a reporter that does not write HTML
+    - passing --reporter=line or --list overrides the configured html reporter.
+    Run "npm test" plain, then open the report.
+    If the port is busy, pick another:
+        npx playwright show-report --port 9400
+    The server holds the terminal until you press Ctrl+C. If a previous one is
+    still running in a forgotten terminal, that is what is occupying the port.
+
+Only running against dev: "connect ECONNREFUSED 127.0.0.1:3000"
+    Nothing is listening on port 3000 - the local app is not started. The dev
+    environment expects a local clone of the app under test, started separately:
+        git clone https://github.com/jeffersonRibeiro/react-shopping-cart.git
+        cd react-shopping-cart
+        npm install
+        npm start
+    That app is several years old, so if npm install fails on peer dependency
+    conflicts, retry with --legacy-peer-deps.
+    If something else already owns port 3000, either stop it or point BASE_URL in
+    config/environments/dev.env at the port you actually used. Note the URL must
+    be http, not https - see section 10.2.
+    See docs/architecture.md for why dev is not run in CI.
+
+ESLint prints a deprecation warning about eslintrc on every lint
+    Expected. This project uses the older eslintrc config format, and the lint
+    script sets ESLINT_USE_FLAT_CONFIG=false deliberately. The warning is
+    noise; lint still passes. Migrating to eslint.config.js would remove it.
+
+A commit is rejected by the pre-commit hook
+    .husky/pre-commit runs "npm run validate" - typecheck, lint, and an
+    encoding check. Run it yourself to see the actual error:
+        npm run validate
+    The encoding check exists because docs were twice corrupted by a PowerShell
+    pipeline re-encoding UTF-8 punctuation. If it flags a file, rewrite the
+    offending characters as plain ASCII.
+
+One or two tests fail intermittently, the rest pass
+    Most likely a slow response from the live app rather than a real defect.
+    Confirm by re-running just that test:
+        npx playwright test -g "TC-..." --workers=1
+    Then open the trace for the failure - test-results/ holds a trace, video,
+    and screenshot for any failed test:
+        npx playwright show-trace test-results/<folder>/trace.zip
+    docs/failure-analysis-example.md walks through this process on a real
+    failure, and docs/defects.md lists the three defects already known to exist
+    in the app itself.

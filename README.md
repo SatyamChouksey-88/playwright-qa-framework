@@ -1,6 +1,8 @@
 # Playwright QA Framework — React Shopping Cart
 
-Enterprise-grade Playwright automation framework for the [Typescript React Shopping Cart](https://react-shopping-cart-67954.firebaseapp.com/products) demo application.
+Playwright test suite for the [Typescript React Shopping Cart](https://react-shopping-cart-67954.firebaseapp.com/products) demo application. The app under test is a public deployment and is not part of this repo.
+
+**New here?** [HOW_TO_RUN.txt](HOW_TO_RUN.txt) is setup and every command, step by step; [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) explains what each folder and file is for.
 
 **57 automated tests, all passing** as of 2026-07-27. Three application defects
 found — see [docs/defects.md](docs/defects.md).
@@ -133,7 +135,10 @@ captured screenshots of the suite run, the HTML report, and the project layout.
 
 ## Playwright MCP Setup
 
-Add to Cursor MCP settings (`.cursor/mcp.json` included):
+MCP (Model Context Protocol) lets an AI agent drive a real browser. The config
+below is what this project used; it is not shipped in the repo, because
+`.cursor/` is local editor config. Create `.cursor/mcp.json` yourself if you want
+it:
 
 ```json
 {

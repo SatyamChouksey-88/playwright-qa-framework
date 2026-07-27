@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Enterprise Playwright QA automation framework for React Shopping Cart",
   "private": true,
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
   "scripts": {
     "test": "playwright test",
     "test:headed": "playwright test --headed",

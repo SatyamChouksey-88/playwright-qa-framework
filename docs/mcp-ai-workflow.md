@@ -67,7 +67,10 @@ Re-run Phase 0 exploration when the app updates price formatting, and prefer num
 
 ## 1. MCP availability check (literal calls and results)
 
-`.cursor/mcp.json` declares the server:
+The MCP config in place during this session declared the server as follows. It
+lived at `.cursor/mcp.json`, which was removed when the project was packaged for
+handoff — `.cursor/` is local editor config, not part of the framework. Recreate
+it to reproduce this setup:
 
 ```json
 {

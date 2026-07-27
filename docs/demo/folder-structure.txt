@@ -1,103 +1,117 @@
-.cursor/
-.cursor\mcp.json
-.env.example
-.eslintrc.cjs
-.husky/
-.husky\_/
-.husky\_\.gitignore
-.husky\_\applypatch-msg
-.husky\_\commit-msg
-.husky\_\h
-.husky\_\husky.sh
-.husky\_\post-applypatch
-.husky\_\post-checkout
-.husky\_\post-commit
-.husky\_\post-merge
-.husky\_\post-rewrite
-.husky\_\pre-applypatch
-.husky\_\pre-auto-gc
-.husky\_\pre-commit
-.husky\_\pre-merge-commit
-.husky\_\prepare-commit-msg
-.husky\_\pre-push
-.husky\_\pre-rebase
-.husky\pre-commit
-.prettierrc
-azure-pipelines.yml
-config/
-config\env.ts
-config\environments/
-config\environments\dev.env
-config\environments\prod.env
-config\environments\staging.env
-docker/
-docker\Dockerfile
-docs/
-docs\architecture.md
-docs\defects.md
-docs\demo/
-docs\demo\suite-run.txt
-docs\exploration-notes.md
-docs\exploratory-charters.md
-docs\failure-analysis-example.md
-docs\mcp-ai-workflow.md
-docs\test-cases.md
-docs\test-plan.md
-package.json
-package-lock.json
-playwright.config.ts
-README.md
-scripts/
-scripts\explore.mjs
-scripts\generate-mock-products.mjs
-scripts\probe-error-states.mjs
-scripts\probe-filter.mjs
-src/
-src\api/
-src\api\products.api-client.ts
-src\fixtures/
-src\fixtures\test-fixtures.ts
-src\pages/
-src\pages\base.page.ts
-src\pages\cart.component.ts
-src\pages\filter.component.ts
-src\pages\products.page.ts
-src\pages\selectors.ts
-src\types/
-src\types\product.types.ts
-src\utils/
-src\utils\api-mock.util.ts
-src\utils\currency.util.ts
-src\utils\logger.util.ts
-src\utils\mock-data.generator.ts
-src\utils\network.util.ts
-src\utils\retry.util.ts
-src\utils\size-codes.util.ts
-test-data/
-test-data\api-snapshots/
-test-data\api-snapshots\products-response.sample.json
-test-data\boundary-values.json
-test-data\mock-products-100.json
-test-data\price-filters.json
-test-data\size-codes.json
-tests/
-tests\api/
-tests\api\products-api.spec.ts
-tests\api\products-schema.spec.ts
-tests\boundary/
-tests\boundary\catalog-boundary.spec.ts
-tests\boundary\price-filter-boundary.spec.ts
-tests\e2e/
-tests\e2e\filter-and-cart-flow.spec.ts
-tests\e2e\shopping-journey.spec.ts
-tests\functional/
-tests\functional\cart-price-validation.spec.ts
-tests\functional\cart-quantity.spec.ts
-tests\functional\product-catalog.spec.ts
-tests\functional\size-filter.spec.ts
-tests\negative/
-tests\negative\api-failure.spec.ts
-tests\negative\cart-negative.spec.ts
-tests\performance/
-tests\performance\large-catalog-render.spec.ts
-tsconfig.json
+﻿playwright-qa-framework/
+├── .github/
+│   └── workflows/
+│       └── playwright.yml
+├── .husky/
+│   ├── _/
+│   │   ├── .gitignore
+│   │   ├── applypatch-msg
+│   │   ├── commit-msg
+│   │   ├── h
+│   │   ├── husky.sh
+│   │   ├── post-applypatch
+│   │   ├── post-checkout
+│   │   ├── post-commit
+│   │   ├── post-merge
+│   │   ├── post-rewrite
+│   │   ├── pre-applypatch
+│   │   ├── pre-auto-gc
+│   │   ├── pre-commit
+│   │   ├── pre-merge-commit
+│   │   ├── pre-push
+│   │   ├── pre-rebase
+│   │   └── prepare-commit-msg
+│   └── pre-commit
+├── config/
+│   ├── environments/
+│   │   ├── dev.env
+│   │   ├── prod.env
+│   │   └── staging.env
+│   └── env.ts
+├── docker/
+│   └── Dockerfile
+├── docs/
+│   ├── demo/
+│   │   ├── 01-suite-run.png
+│   │   ├── 02-html-report-overview.png
+│   │   ├── 03-html-report-test-detail.png
+│   │   ├── 04-folder-structure.png
+│   │   ├── folder-structure.txt
+│   │   ├── README.md
+│   │   └── suite-run.txt
+│   ├── architecture.md
+│   ├── defects.md
+│   ├── exploration-notes.md
+│   ├── exploratory-charters.md
+│   ├── failure-analysis-example.md
+│   ├── mcp-ai-workflow.md
+│   ├── test-cases.md
+│   └── test-plan.md
+├── scripts/
+│   ├── capture-demo.mjs
+│   ├── check-encoding.mjs
+│   ├── explore.mjs
+│   ├── generate-mock-products.mjs
+│   ├── print-tree.mjs
+│   ├── probe-error-states.mjs
+│   └── probe-filter.mjs
+├── src/
+│   ├── api/
+│   │   └── products.api-client.ts
+│   ├── fixtures/
+│   │   └── test-fixtures.ts
+│   ├── pages/
+│   │   ├── base.page.ts
+│   │   ├── cart.component.ts
+│   │   ├── filter.component.ts
+│   │   ├── products.page.ts
+│   │   └── selectors.ts
+│   ├── types/
+│   │   └── product.types.ts
+│   └── utils/
+│       ├── api-mock.util.ts
+│       ├── currency.util.ts
+│       ├── logger.util.ts
+│       ├── mock-data.generator.ts
+│       ├── network.util.ts
+│       ├── retry.util.ts
+│       └── size-codes.util.ts
+├── test-data/
+│   ├── api-snapshots/
+│   │   └── products-response.sample.json
+│   ├── boundary-values.json
+│   ├── mock-products-100.json
+│   ├── price-filters.json
+│   └── size-codes.json
+├── tests/
+│   ├── api/
+│   │   ├── products-api.spec.ts
+│   │   └── products-schema.spec.ts
+│   ├── boundary/
+│   │   ├── catalog-boundary.spec.ts
+│   │   └── price-filter-boundary.spec.ts
+│   ├── e2e/
+│   │   ├── filter-and-cart-flow.spec.ts
+│   │   └── shopping-journey.spec.ts
+│   ├── functional/
+│   │   ├── cart-price-validation.spec.ts
+│   │   ├── cart-quantity.spec.ts
+│   │   ├── product-catalog.spec.ts
+│   │   └── size-filter.spec.ts
+│   ├── negative/
+│   │   ├── api-failure.spec.ts
+│   │   └── cart-negative.spec.ts
+│   └── performance/
+│       └── large-catalog-render.spec.ts
+├── .env.example
+├── .eslintrc.cjs
+├── .gitignore
+├── .prettierrc
+├── azure-pipelines.yml
+├── HOW_TO_RUN.txt
+├── package-lock.json
+├── package.json
+├── playwright.config.ts
+├── PROJECT_STRUCTURE.md
+├── README.md
+└── tsconfig.json

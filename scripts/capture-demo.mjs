@@ -136,17 +136,18 @@ if (existsSync(runPath)) {
 // 4. The folder structure.
 const treePath = resolve(DEMO_DIR, 'folder-structure.txt');
 if (existsSync(treePath)) {
+  // Only trailing whitespace is stripped - the leading box-drawing characters
+  // are the tree's indentation and must survive.
   const entries = readText(treePath)
     .split('\n')
-    .map((l) => l.trim())
-    .filter(Boolean)
-    .filter((l) => !l.startsWith('test-data/api-snapshots/') || l.endsWith('.json'));
+    .map((l) => l.replace(/\s+$/, ''))
+    .filter(Boolean);
 
-  const page = await browser.newPage({ viewport: { width: 1280, height: 1500 } });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 1800 } });
   await page.setContent(
     terminalPage(
       'playwright-qa-framework — structure',
-      'Get-ChildItem -Recurse (node_modules and reports excluded)',
+      'node scripts/print-tree.mjs',
       escapeHtml(entries.join('\n'))
     )
   );

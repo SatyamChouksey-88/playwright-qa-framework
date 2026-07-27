@@ -8,4 +8,10 @@ test-results/
 all-blob-reports/
 junit-results.xml
 *.log
+
+# Local editor / agent config - machine-specific, not part of the framework
+.cursor/
+
+# OS junk
 .DS_Store
+Thumbs.db
