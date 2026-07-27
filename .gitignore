@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.local
+playwright-report/
+blob-report/
+test-results/
+all-blob-reports/
+junit-results.xml
+*.log
+.DS_Store

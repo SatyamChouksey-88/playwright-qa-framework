@@ -1,0 +1,13 @@
+{
+  "products": [
+    {
+      "id": 0,
+      "sku": 8552515751438644,
+      "title": "Cropped Stay Groovy off white",
+      "availableSizes": ["X", "L", "XL", "XXL"],
+      "price": 10.9,
+      "currencyFormat": "$",
+      "currencyId": "USD"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "name": "playwright-qa-framework",
+  "version": "1.0.0",
+  "description": "Enterprise Playwright QA automation framework for React Shopping Cart",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:functional": "playwright test tests/functional",
+    "test:negative": "playwright test tests/negative",
+    "test:boundary": "playwright test tests/boundary",
+    "test:e2e": "playwright test tests/e2e",
+    "test:performance": "playwright test tests/performance",
+    "test:api": "playwright test tests/api",
+    "test:dev": "cross-env TEST_ENV=dev playwright test",
+    "test:staging": "cross-env TEST_ENV=staging playwright test",
+    "test:prod": "cross-env TEST_ENV=prod playwright test",
+    "test:report": "playwright show-report",
+    "data:generate": "node scripts/generate-mock-products.mjs",
+    "lint": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts",
+    "lint:fix": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts --fix",
+    "format": "prettier --write \"**/*.{ts,json,md,yml}\"",
+    "typecheck": "tsc --noEmit",
+    "validate": "npm run typecheck && npm run lint",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^22.15.29",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "^16.5.0",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,88 @@
+﻿node.exe : npm warn Unknown env config "devdir". This will stop working in the next major version of npm. See `npm 
+help npmrc` for supported config options.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...config options.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+> playwright-qa-framework@1.0.0 test
+> playwright test
+
+
+Running 57 tests using 7 workers
+
+(node:15552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:31532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:29200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [chromium] › tests\api\products-api.spec.ts:9:7 › API — Products endpoint › TC-API-001: every product has valid abbreviated size codes (800ms)
+  ok  3 [chromium] › tests\api\products-schema.spec.ts:5:7 › API — Products payload contract › TC-API-004: every product exposes the fields the UI depends on (856ms)
+  ok  1 [chromium] › tests\api\products-api.spec.ts:21:7 › API — Products endpoint › TC-API-002: API sizes align with UI filter checkboxes (2.6s)
+  ok  6 [chromium] › tests\api\products-schema.spec.ts:38:7 › API — Products payload contract › TC-API-006: prices are positive and installments are never negative (806ms)
+  ok  4 [chromium] › tests\boundary\catalog-boundary.spec.ts:12:7 › Boundary — Catalog size and price extremes › TC-BND-003: a single-product catalog renders and adds correctly (2.1s)
+  ok  7 [chromium] › tests\api\products-api.spec.ts:49:7 › API — Products endpoint › TC-API-003: each UI filter size code appears on at least one product (854ms)
+  ok  5 [chromium] › tests\boundary\catalog-boundary.spec.ts:31:7 › Boundary — Catalog size and price extremes › TC-BND-004: the highest-priced catalog item calculates its total exactly (2.8s)
+  ok 13 [chromium] › tests\api\products-schema.spec.ts:51:7 › API — Products payload contract › TC-API-007: the products endpoint responds 200 as JSON within budget (818ms)
+  ok 12 [chromium] › tests\api\products-schema.spec.ts:26:7 › API — Products payload contract › TC-API-005: product ids and skus are unique across the catalog (832ms)
+  ok  8 [chromium] › tests\boundary\catalog-boundary.spec.ts:47:7 › Boundary — Catalog size and price extremes › TC-BND-005: the lowest-priced catalog item calculates its total exactly (3.2s)
+  ok 11 [chromium] › tests\boundary\catalog-boundary.spec.ts:105:7 › Boundary — Catalog size and price extremes › TC-BND-008: the minimum boundary price renders and totals without rounding loss (2.9s)
+  ok 14 [chromium] › tests\boundary\catalog-boundary.spec.ts:130:7 › Boundary — Catalog size and price extremes › TC-BND-009: the maximum boundary price renders and totals without truncation (2.5s)
+  ok  9 [chromium] › tests\boundary\catalog-boundary.spec.ts:81:7 › Boundary — Catalog size and price extremes › TC-BND-007: a high quantity keeps the grand total precise (4.0s)
+  ok 10 [chromium] › tests\boundary\catalog-boundary.spec.ts:63:7 › Boundary — Catalog size and price extremes › TC-BND-006: selecting every filter size shows the full union of products (7.3s)
+  ok 15 [chromium] › tests\boundary\price-filter-boundary.spec.ts:7:7 › Boundary — Price filtering › TC-BND-001: catalog price matches reconcile exactly with the API (6.2s)
+  ok 22 [chromium] › tests\e2e\shopping-journey.spec.ts:96:7 › E2E — Shopping journeys › TC-E2E-006: a complete purchase journey ends at the checkout confirmation (3.1s)
+  ok 21 [chromium] › tests\e2e\shopping-journey.spec.ts:60:7 › E2E — Shopping journeys › TC-E2E-005: filtering, adding, clearing the filter, and adding again keeps both lines (5.1s)
+  ok 24 [chromium] › tests\functional\cart-price-validation.spec.ts:68:7 › Task 1 — Product Selection & Cart Validation › TC-CART-002: zero price matches — cart stays empty with mocked API (1.6s)
+  ok 23 [chromium] › tests\functional\cart-price-validation.spec.ts:15:7 › Task 1 — Product Selection & Cart Validation › TC-CART-001: add all $10.90 and $14.90 products and validate cart totals (6.0s)
+  ok 25 [chromium] › tests\functional\cart-price-validation.spec.ts:92:7 › Task 1 — Product Selection & Cart Validation › TC-CART-003: removing a line clears it and recalculates totals (2.9s)
+  ok 26 [chromium] › tests\functional\cart-price-validation.spec.ts:111:7 › Task 1 — Product Selection & Cart Validation › TC-CART-004: duplicate add increments quantity instead of creating new line (2.5s)
+  ok 27 [chromium] › tests\functional\cart-quantity.spec.ts:9:7 › Functional — Cart quantity operations › TC-CART-005: increasing quantity updates line quantity and grand total (2.4s)
+  ok 28 [chromium] › tests\functional\cart-quantity.spec.ts:26:7 › Functional — Cart quantity operations › TC-CART-006: decreasing after increasing returns to original quantity and total (2.3s)
+  ok 29 [chromium] › tests\functional\cart-quantity.spec.ts:43:7 › Functional — Cart quantity operations › TC-CART-007: adding distinct products creates separate cart lines (2.5s)
+  ok 30 [chromium] › tests\functional\cart-quantity.spec.ts:64:7 › Functional — Cart quantity operations › TC-CART-008: cart badge equals the sum of all line quantities (2.4s)
+  ok 31 [chromium] › tests\functional\cart-quantity.spec.ts:83:7 › Functional — Cart quantity operations › TC-CART-009: checkout alert reports the same subtotal shown in the cart footer (2.1s)
+  ok 33 [chromium] › tests\functional\product-catalog.spec.ts:16:7 › Functional — Catalog rendering matches API data › TC-PROD-002: every API product title is rendered in the catalog (1.8s)
+  ok 32 [chromium] › tests\functional\product-catalog.spec.ts:5:7 › Functional — Catalog rendering matches API data › TC-PROD-001: rendered card count equals the product count label and API length (1.9s)
+  ok 34 [chromium] › tests\functional\product-catalog.spec.ts:32:7 › Functional — Catalog rendering matches API data › TC-PROD-003: displayed price matches the API price for every product (1.8s)
+  ok 35 [chromium] › tests\functional\product-catalog.spec.ts:50:7 › Functional — Catalog rendering matches API data › TC-PROD-004: free shipping badge appears only for isFreeShipping products (1.8s)
+  ok 36 [chromium] › tests\functional\product-catalog.spec.ts:66:7 › Functional — Catalog rendering matches API data › TC-PROD-005: installment text is shown only when installments > 0 (1.8s)
+  ok 37 [chromium] › tests\functional\size-filter.spec.ts:4:7 › Functional — Size filter behaviour › TC-FILTER-001: filtering by one size shows exactly the API-matching products (2.3s)
+  ok 38 [chromium] › tests\functional\size-filter.spec.ts:21:7 › Functional — Size filter behaviour › TC-FILTER-002: two sizes combine as a union, not an intersection (3.4s)
+  ok 39 [chromium] › tests\functional\size-filter.spec.ts:44:7 › Functional — Size filter behaviour › TC-FILTER-003: unchecking the last size restores the full catalog (3.2s)
+  ok 40 [chromium] › tests\negative\api-failure.spec.ts:19:7 › Negative — Products API failure handling › TC-NEG-007: an empty catalog renders "0 Product(s) found" with no page errors (572ms)
+  ok 41 [chromium] › tests\negative\api-failure.spec.ts:34:7 › Negative — Products API failure handling › TC-NEG-008: an empty catalog keeps the size filter rendered and interactive (1.1s)
+  ok 42 [chromium] › tests\negative\api-failure.spec.ts:49:7 › Negative — Products API failure handling › TC-NEG-009: an empty catalog leaves the cart at zero and checkout guarded (1.0s)
+  ok 43 [chromium] › tests\negative\api-failure.spec.ts:72:7 › Negative — Products API failure handling › TC-NEG-010: an HTTP 500 degrades to zero products without blanking the page (695ms)
+  ok 44 [chromium] › tests\negative\api-failure.spec.ts:84:7 › Negative — Products API failure handling › TC-NEG-011: DEF-001 — an HTTP 500 surfaces an unhandled rejection (654ms)
+  ok 45 [chromium] › tests\negative\api-failure.spec.ts:103:7 › Negative — Products API failure handling › TC-NEG-012: DEF-002 — malformed JSON leaves the catalog stuck with no count label (1.3s)
+  ok 47 [chromium] › tests\negative\api-failure.spec.ts:131:7 › Negative — Products API failure handling › TC-NEG-014: a catalog with no product in the selected size filters to zero (1.3s)
+  ok 48 [chromium] › tests\negative\cart-negative.spec.ts:8:7 › Negative — Cart edge cases › TC-NEG-001: checkout with empty cart shows a guidance alert (1.6s)
+  ok 46 [chromium] › tests\negative\api-failure.spec.ts:118:7 › Negative — Products API failure handling › TC-NEG-013: a slow catalog response still renders once it resolves (4.1s)
+  ok 50 [chromium] › tests\negative\cart-negative.spec.ts:35:7 › Negative — Cart edge cases › TC-NEG-003: a fresh session starts with an empty cart badge (1.5s)
+  ok 49 [chromium] › tests\negative\cart-negative.spec.ts:23:7 › Negative — Cart edge cases › TC-NEG-002: decrease button is disabled at quantity 1 (2.1s)
+  ok 51 [chromium] › tests\negative\cart-negative.spec.ts:39:7 › Negative — Cart edge cases › TC-NEG-004: removing the only line leaves the cart empty and re-addable (2.5s)
+  ok 52 [chromium] › tests\negative\cart-negative.spec.ts:53:7 › Negative — Cart edge cases › TC-NEG-005: closing the cart drawer preserves its contents (2.5s)
+  ok 54 [chromium] › tests\performance\large-catalog-render.spec.ts:21:7 › Performance — Large catalog render › TC-PERF-001: 100 mocked products render without page errors (1.1s)
+  ok 53 [chromium] › tests\negative\cart-negative.spec.ts:69:7 › Negative — Cart edge cases › TC-NEG-006: adding the same product repeatedly never creates duplicate lines (2.9s)
+  ok 55 [chromium] › tests\performance\large-catalog-render.spec.ts:41:7 › Performance — Large catalog render › TC-PERF-002: the first product stays interactive within the time budget (1.4s)
+  ok 56 [chromium] › tests\performance\large-catalog-render.spec.ts:64:7 › Performance — Large catalog render › TC-PERF-003: every one of the 100 cards renders a title and a parsable price (819ms)
+  ok 57 [chromium] › tests\performance\large-catalog-render.spec.ts:86:7 › Performance — Large catalog render › TC-PERF-004: filtering a 100-product catalog stays within the time budget (1.0s)
+  ok 17 [chromium] › tests\e2e\filter-and-cart-flow.spec.ts:8:7 › E2E — Filter network behavior & shopping flow › TC-E2E-001: size filter triggers products.json re-fetch without query params (1.1m)
+  ok 18 [chromium] › tests\e2e\filter-and-cart-flow.spec.ts:31:7 › E2E — Filter network behavior & shopping flow › TC-E2E-002: full flow — filter, add matching product, validate cart (1.1m)
+  ok 20 [chromium] › tests\e2e\shopping-journey.spec.ts:31:7 › E2E — Shopping journeys › TC-E2E-004: multi-product journey with quantity changes reconciles the grand total (1.1m)
+  ok 19 [chromium] › tests\e2e\shopping-journey.spec.ts:10:7 › E2E — Shopping journeys › TC-E2E-003: filter, add, remove, and end with an empty cart (1.1m)
+  ok 16 [chromium] › tests\boundary\price-filter-boundary.spec.ts:33:7 › Boundary — Price filtering › TC-BND-002: toggling size filter changes then restores product count (1.1m)
+
+  57 passed (1.2m)

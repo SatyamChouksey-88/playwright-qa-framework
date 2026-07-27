@@ -1,0 +1,10 @@
+{
+  "minimumCatalogSize": 16,
+  "interactiveTimeoutMs": 15000,
+  "highQuantity": 10,
+  "edgePrices": {
+    "minimum": 0.01,
+    "maximum": 999999.99
+  },
+  "description": "Boundary inputs. minimumCatalogSize is a floor, not an exact count, so upstream catalog growth does not fail the suite. edgePrices are injected via mocked catalogs, not present in real data."
+}

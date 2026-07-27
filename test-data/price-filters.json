@@ -1,0 +1,5 @@
+{
+  "targetPrices": [10.9, 14.9],
+  "displayPrices": ["$10.90", "$14.90"],
+  "description": "Prices used for Task 1 product selection — numeric values match API; display values match UI format."
+}

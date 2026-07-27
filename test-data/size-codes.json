@@ -1,0 +1,5 @@
+{
+  "uiFilterSizes": ["XS", "S", "M", "ML", "L", "XL", "XXL"],
+  "allowedApiSizeCodes": ["XS", "S", "M", "ML", "L", "XL", "XXL", "X"],
+  "description": "UI filter labels match Filter.tsx availableSizes. API may also emit legacy 'X' (not a UI checkbox). Never spelled-out words like 'small'."
+}
