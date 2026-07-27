@@ -121,6 +121,11 @@ From `useProducts.tsx`:
 
 The `-` button is **disabled at quantity 1** (UI guard). Decreasing to 0 via stepper is **not possible**. Removing a line requires the **delete button** (`title="remove product from cart"`). Tests for "empty line" should use remove button or validate minus is disabled at qty 1.
 
+> The resulting design decision is recorded as **DD-01** in
+> [`test-cases.md`](./test-cases.md#design-decisions) and summarised in
+> [`test-plan.md`](./test-plan.md#7-design-decisions). This section is the raw
+> observation; those are the decision of record.
+
 ---
 
 ## Rendering at Scale

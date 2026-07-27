@@ -2,6 +2,18 @@
 
 Enterprise-grade Playwright automation framework for the [Typescript React Shopping Cart](https://react-shopping-cart-67954.firebaseapp.com/products) demo application.
 
+**57 automated tests, all passing** as of 2026-07-27. Three application defects
+found — see [docs/defects.md](docs/defects.md).
+
+| Category | Tests | Directory |
+|----------|-------|-----------|
+| Functional | 17 | `tests/functional/` |
+| Negative | 14 | `tests/negative/` |
+| Boundary / edge | 9 | `tests/boundary/` |
+| End-to-end | 6 | `tests/e2e/` |
+| API | 7 | `tests/api/` |
+| Performance | 4 | `tests/performance/` |
+
 ## Quick Start
 
 ```bash
@@ -37,12 +49,18 @@ playwright-qa-framework/
 
 | Command | Description |
 |---------|-------------|
-| `npm test` | Run all tests |
-| `npm run test:functional` | Task 1 cart validation specs |
-| `npm run test:api` | API tests only |
-| `npm run test:headed` | Run with visible browser |
+| `npm test` | Run all 57 tests |
+| `npm run test:functional` | Functional specs (17) |
+| `npm run test:negative` | Negative specs (14) |
+| `npm run test:boundary` | Boundary specs (9) |
+| `npm run test:e2e` | End-to-end specs (6) |
+| `npm run test:api` | API specs (7) |
+| `npm run test:performance` | Performance specs (4) |
+| `npm run test:dev` / `:staging` / `:prod` | Run against a specific environment |
+| `npm run test:headed` | Run with a visible browser |
 | `npm run test:ui` | Playwright UI mode |
 | `npm run validate` | TypeScript + ESLint |
+| `npm run data:generate` | Regenerate `test-data/mock-products-100.json` |
 
 ## Environment Configuration
 
@@ -52,19 +70,37 @@ Copy `.env.example` to `.env` and set:
 TEST_ENV=prod   # dev | staging | prod
 ```
 
-| Environment | Base URL |
-|-------------|----------|
-| prod | https://react-shopping-cart-67954.firebaseapp.com |
-| dev | http://localhost:3000 (local clone) |
+| Environment | Base URL | Notes |
+|-------------|----------|-------|
+| prod | https://react-shopping-cart-67954.firebaseapp.com | Default; all 57 tests run |
+| staging | Same host | Proves the env switch; no separate deployment exists |
+| dev | http://localhost:3000 | Local clone; 40 run, 17 skip with a stated reason |
+
+Running against dev requires the app locally:
+
+```bash
+git clone https://github.com/jeffersonRibeiro/react-shopping-cart.git ../react-shopping-cart
+cd ../react-shopping-cart && npm install --legacy-peer-deps && npm start
+npm run test:dev     # back in playwright-qa-framework
+```
+
+A dev build resolves its catalog from a bundled JSON module instead of calling
+Firebase, so mock-based and network-assertion tests skip themselves rather than
+fail misleadingly. See
+[architecture.md](docs/architecture.md#environment-status).
 
 ## Task 1 Summary
 
 Automated scenario:
-1. Dynamically reads all catalog prices from the live UI
-2. Identifies products at exactly **$10.90** and **$14.90** (6 products)
-3. Adds all matches to cart
-4. Validates name, price, quantity per line
-5. Validates subtotals, total quantity, and grand total ($73.40)
+
+1. Reads the expected match set from the live `products.json` (source of truth)
+2. Reads all catalog prices from the rendered UI and reconciles the two
+3. Identifies products at exactly **$10.90** and **$14.90** — currently 6, but the
+   count is derived, never hardcoded
+4. Adds every match to the cart
+5. Validates name, unit price, quantity and subtotal per line
+6. Validates total quantity and grand total (currently $73.40, computed from the
+   line data rather than asserted as a literal)
 
 Spec: `tests/functional/cart-price-validation.spec.ts`
 
@@ -83,16 +119,15 @@ Spec: `tests/functional/cart-price-validation.spec.ts`
 | [test-cases.md](docs/test-cases.md) | Detailed test case catalog |
 | [architecture.md](docs/architecture.md) | Framework design |
 | [mcp-ai-workflow.md](docs/mcp-ai-workflow.md) | AI/MCP workflow evidence |
+| [defects.md](docs/defects.md) | Application defects found, with reproduction |
+| [demo/README.md](docs/demo/README.md) | Annotated walkthrough with screenshots |
+| [exploratory-charters.md](docs/exploratory-charters.md) | Exploratory testing charters |
+| [failure-analysis-example.md](docs/failure-analysis-example.md) | Worked failure analysis |
 
-## Walkthrough Script
+## Walkthrough
 
-1. `npm test` — observe 14 tests pass
-2. `npm run test:report` — open HTML report, drill into TC-CART-001 steps
-3. Show `docs/exploration-notes.md` — API URL, filter behavior, locators
-4. Show `src/pages/` — POM with centralized locators
-5. Show `test-data/price-filters.json` — externalized target prices
-6. Push to GitHub — show Actions workflow running sharded tests
-7. Download `playwright-html-report` artifact from CI
+See [docs/demo/README.md](docs/demo/README.md) for the annotated walkthrough with
+captured screenshots of the suite run, the HTML report, and the project layout.
 
 ## Playwright MCP Setup
 

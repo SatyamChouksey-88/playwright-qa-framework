@@ -51,7 +51,11 @@ jobs:
         with:
           path: all-blob-reports
           pattern: blob-report-*
-      - run: npx playwright merge-reports --reporter html ./all-blob-reports/**
+          # merge-reports takes exactly one directory. Without merge-multiple the
+          # shards land in all-blob-reports/blob-report-0 and .../blob-report-1,
+          # and a `/**` glob then passes two arguments and the command fails.
+          merge-multiple: true
+      - run: npx playwright merge-reports --reporter html ./all-blob-reports
       - uses: actions/upload-artifact@v4
         with:
           name: playwright-html-report

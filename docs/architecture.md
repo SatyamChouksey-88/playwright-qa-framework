@@ -75,7 +75,10 @@ detached node.
 
 - GitHub Actions: matrix sharding (2 shards), artifact upload
 - Azure Pipelines: single-runner equivalent with JUnit publish
-- Docker: `mcr.microsoft.com/playwright:v1.58.2-jammy`
+- Docker: `mcr.microsoft.com/playwright:v1.62.0-jammy` — the tag is pinned to the
+  exact `@playwright/test` version in `package.json`. A drift between the two
+  means the image's preinstalled browsers no longer match the client, so
+  `@playwright/test` is pinned exactly rather than with a `^` range.
 
 ## Multi-Environment
 

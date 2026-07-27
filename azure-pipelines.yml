@@ -24,6 +24,10 @@ steps:
     displayName: Run Playwright tests
     env:
       TEST_ENV: $(testEnvironment)
+      # Azure DevOps does not set CI automatically (unlike GitHub Actions), and
+      # playwright.config.ts only emits the JUnit reporter when CI is set. Without
+      # this the PublishTestResults task below finds no results file.
+      CI: 'true'
 
   - task: PublishTestResults@2
     condition: always()
