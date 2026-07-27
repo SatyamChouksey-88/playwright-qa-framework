@@ -106,6 +106,8 @@ Spec: `tests/functional/cart-price-validation.spec.ts`
 
 ## CI/CD
 
+[![Playwright Tests](https://github.com/SatyamChouksey-88/playwright-qa-framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/SatyamChouksey-88/playwright-qa-framework/actions/workflows/playwright.yml)
+
 - **GitHub Actions:** `.github/workflows/playwright.yml` — sharded runs, merged HTML report
 - **Azure DevOps:** `azure-pipelines.yml` — JUnit + HTML artifacts
 - **Docker:** `docker/Dockerfile` — official Playwright image

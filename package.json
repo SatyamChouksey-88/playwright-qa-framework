@@ -23,7 +23,8 @@
     "lint:fix": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts --fix",
     "format": "prettier --write \"**/*.{ts,json,md,yml}\"",
     "typecheck": "tsc --noEmit",
-    "validate": "npm run typecheck && npm run lint",
+    "check:encoding": "node scripts/check-encoding.mjs",
+    "validate": "npm run typecheck && npm run lint && npm run check:encoding",
     "prepare": "husky"
   },
   "lint-staged": {
