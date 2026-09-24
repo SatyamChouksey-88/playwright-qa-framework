@@ -19,12 +19,13 @@ export class CartComponent {
     this.subtotalLabel = page.getByText('SUBTOTAL', { exact: true });
     this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
     this.removeButton = page.locator(SELECTORS.removeFromCart);
-    this.closeButton = page.locator('button').filter({ hasText: /^X$/ });
+    this.closeButton = page.getByRole('button', { name: 'X', exact: true });
   }
 
   /**
    * Exact-text match on purpose: `hasText` substring-matches case-insensitively,
    * which would make "Blue T-Shirt" also select the "Marine Blue T-shirt" line.
+   * Parent traversal uses XPath because the demo DOM has no cart-line test id.
    */
   lineItemByTitle(title: string): Locator {
     return this.removeButton
@@ -61,6 +62,7 @@ export class CartComponent {
 
   async getGrandTotal(): Promise<number> {
     await this.openCart();
+    // Footer has no test id — climb one level from the SUBTOTAL label.
     const footerText = await this.subtotalLabel.locator('xpath=ancestor::div[1]').innerText();
     const match = footerText.match(/\$\s*\d+\.\d{2}/);
     return parseCurrency(match?.[0] ?? '0');
