@@ -1,13 +1,20 @@
 node_modules/
 dist/
+build/
 .env
 .env.local
 playwright-report/
 blob-report/
 test-results/
 all-blob-reports/
+allure-results/
+allure-report/
+playwright/.auth/
 junit-results.xml
 *.log
+target/
+.idea/
+.vscode/
 
 # Local editor / agent config - machine-specific, not part of the framework
 .cursor/
