@@ -59,11 +59,11 @@ export class ProductsPage extends BasePage {
   }
 
   /**
-   * XPath used when chaining from a known title to the sibling price block —
-   * no data-testid exists on price elements in this app.
+   * Price text inside a known product card. Prefer getByText over a deep CSS
+   * chain — the demo app has no price data-testid.
    */
   priceInCardByTitle(title: string): Locator {
-    return this.productCardByTitle(title).locator('xpath=.//*[contains(text(),"$")]');
+    return this.productCardByTitle(title).getByText(/\$\s*\d+\.\d{2}/);
   }
 
   async getAllCatalogProducts(): Promise<CatalogProduct[]> {
@@ -107,7 +107,7 @@ export class ProductsPage extends BasePage {
 
   async addProductToCart(title: string): Promise<void> {
     await this.addToCartForProduct(title).click();
-    const closeBtn = this.page.locator('button').filter({ hasText: /^X$/ });
+    const closeBtn = this.page.getByRole('button', { name: 'X', exact: true });
     if (await closeBtn.isVisible()) {
       await closeBtn.click();
     }

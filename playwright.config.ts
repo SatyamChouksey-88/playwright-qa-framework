@@ -8,6 +8,7 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: isCI,
+  // Retries only in CI — local failures should be investigated, not masked.
   retries: isCI ? 2 : 0,
   workers: isCI ? 2 : undefined,
   timeout: 90_000,
@@ -29,7 +30,8 @@ export default defineConfig({
       ],
   use: {
     baseURL: env.baseUrl,
-    trace: 'retain-on-failure',
+    // Traces on first retry keeps CI artifacts useful without storing every run.
+    trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 15_000,
@@ -39,6 +41,14 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
     },
   ],
 });

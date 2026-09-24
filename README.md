@@ -1,156 +1,129 @@
 # Playwright QA Framework — React Shopping Cart
 
-Playwright test suite for the [Typescript React Shopping Cart](https://react-shopping-cart-67954.firebaseapp.com/products) demo application. The app under test is a public deployment and is not part of this repo.
+[![Playwright Tests](https://github.com/SatyamChouksey-88/playwright-qa-framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/SatyamChouksey-88/playwright-qa-framework/actions/workflows/playwright.yml)
+[![Playwright](https://img.shields.io/badge/Playwright-1.62.0-45ba4b?logo=playwright)](https://playwright.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**New here?** [HOW_TO_RUN.txt](HOW_TO_RUN.txt) is setup and every command, step by step; [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) explains what each folder and file is for.
+**[▶ Live test report](https://satyamchouksey-88.github.io/playwright-qa-framework/)**
 
-**57 automated tests, all passing** as of 2026-07-27. Three application defects
-found — see [docs/defects.md](docs/defects.md).
+Playwright + TypeScript automation for the public
+[React Shopping Cart](https://react-shopping-cart-67954.firebaseapp.com/products)
+demo. Built as an SDET portfolio framework: Page Object Model, fixtures,
+multi-env config, API checks, and CI that publishes an HTML report.
 
-| Category | Tests | Directory |
-|----------|-------|-----------|
-| Functional | 17 | `tests/functional/` |
-| Negative | 14 | `tests/negative/` |
-| Boundary / edge | 9 | `tests/boundary/` |
-| End-to-end | 6 | `tests/e2e/` |
-| API | 7 | `tests/api/` |
-| Performance | 4 | `tests/performance/` |
+## 1. Overview
 
-## Quick Start
+The app under test is a public SPA (not in this repo). This suite proves a
+maintainable UI + API automation layout: semantic locators where the DOM
+allows, fixtures instead of copy-pasted `beforeEach` setup, and pipelines on
+GitHub Actions, Azure DevOps, and Jenkins.
+
+**57 tests** · Chromium / Firefox / WebKit · three application defects documented
+in [docs/defects.md](docs/defects.md).
+
+## 2. Test coverage
+
+| Area | Tests | Type |
+|---|---|---|
+| Functional | 17 | Catalog, cart quantity, size filter, price validation |
+| Negative | 14 | Empty/error catalog, cart edge cases |
+| Boundary | 9 | Catalog + price-filter edges |
+| End-to-end | 6 | Filter → cart journeys |
+| API | 7 | `products.json` contract + schema |
+| Performance | 4 | Large catalog render smoke |
+
+Total: **57** · Browsers: Chromium, Firefox, WebKit · CI: 2 shards + report merge
+
+## 3. Tech stack
+
+Playwright · TypeScript · POM + fixtures · ESLint (`eslint-plugin-playwright`) ·
+Prettier · GitHub Actions · Azure Pipelines · Jenkins · HTML report on Pages
+
+## 4. Architecture
+
+```mermaid
+flowchart LR
+  tests[tests/] --> fixtures[src/fixtures]
+  fixtures --> pages[src/pages]
+  fixtures --> api[src/api]
+  pages --> utils[src/utils]
+  tests --> data[test-data/]
+  pages --> config[config/]
+  api --> config
+```
+
+Short version: specs orchestrate; fixtures inject page objects and the API
+client; page objects own locators and user actions; config selects
+dev/staging/prod. Details: [docs/architecture.md](docs/architecture.md).
+
+## 5. Design decisions
+
+See **[docs/DESIGN_DECISIONS.md](docs/DESIGN_DECISIONS.md)** for why fixtures
+beat `beforeEach`, how locators are chosen, how flakiness is handled, and what
+was intentionally left out of automation.
+
+## 6. Getting started
 
 ```bash
-cd playwright-qa-framework
-npm install
+npm ci
 npx playwright install --with-deps
-npm test
+npx playwright test
 ```
 
-View report:
+Smoke / subset examples:
 
 ```bash
-npm run test:report
+npx playwright test tests/e2e
+npx playwright test --project=chromium
+cross-env TEST_ENV=prod npx playwright test tests/api
 ```
 
-## Project Structure
-
-```
-playwright-qa-framework/
-├── config/           # Environment configuration
-├── src/
-│   ├── pages/        # Page Object Model
-│   ├── fixtures/     # Custom test fixtures
-│   ├── utils/        # Helpers (currency, network, mocks)
-│   └── api/          # API client
-├── tests/            # Test specs by category
-├── test-data/        # Externalized JSON test data
-├── docs/             # Test plan, architecture, exploration notes
-└── .github/workflows # CI pipeline
-```
-
-## Running Tests
+Copy `.env.example` → `.env` if you need to override `TEST_ENV` or URLs.
 
 | Command | Description |
-|---------|-------------|
-| `npm test` | Run all 57 tests |
-| `npm run test:functional` | Functional specs (17) |
-| `npm run test:negative` | Negative specs (14) |
-| `npm run test:boundary` | Boundary specs (9) |
-| `npm run test:e2e` | End-to-end specs (6) |
-| `npm run test:api` | API specs (7) |
-| `npm run test:performance` | Performance specs (4) |
-| `npm run test:dev` / `:staging` / `:prod` | Run against a specific environment |
-| `npm run test:headed` | Run with a visible browser |
-| `npm run test:ui` | Playwright UI mode |
-| `npm run validate` | TypeScript + ESLint |
-| `npm run data:generate` | Regenerate `test-data/mock-products-100.json` |
+|---|---|
+| `npm test` | Full suite (all projects) |
+| `npm run test:e2e` / `:api` / `:functional` / … | Category folders |
+| `npm run test:dev` / `:staging` / `:prod` | Environment switch |
+| `npm run validate` | Typecheck + ESLint + encoding gate |
+| `npm run test:report` | Open last HTML report |
 
-## Environment Configuration
+## 7. CI/CD
 
-Copy `.env.example` to `.env` and set:
+| Trigger | What runs |
+|---|---|
+| Push to `main`, pull requests | Lint → sharded Playwright (3 browsers) → merge HTML report |
+| Nightly cron (`02:00 UTC`) | Same suite against the live public demo |
+| `workflow_dispatch` | Manual run with env choice |
 
-```env
-TEST_ENV=prod   # dev | staging | prod
-```
+- Workflow: [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml)
+- Sharding: 2 shards emit blob reports → `playwright merge-reports` → one HTML
+- Pages: `actions/upload-pages-artifact` + `actions/deploy-pages` from `main`
+- Also: [`azure-pipelines.yml`](azure-pipelines.yml), [`Jenkinsfile`](Jenkinsfile)
 
-| Environment | Base URL | Notes |
-|-------------|----------|-------|
-| prod | https://react-shopping-cart-67954.firebaseapp.com | Default; all 57 tests run |
-| staging | Same host | Proves the env switch; no separate deployment exists |
-| dev | http://localhost:3000 | Local clone; 40 run, 17 skip with a stated reason |
+## 8. Reports & evidence
 
-Running against dev requires the app locally:
+| Evidence | Location |
+|---|---|
+| Live HTML report | https://satyamchouksey-88.github.io/playwright-qa-framework/ |
+| Annotated screenshots | [docs/demo/](docs/demo/) |
+| Failure walkthrough | [docs/failure-analysis-example.md](docs/failure-analysis-example.md) |
 
-```bash
-git clone https://github.com/jeffersonRibeiro/react-shopping-cart.git ../react-shopping-cart
-cd ../react-shopping-cart && npm install --legacy-peer-deps && npm start
-npm run test:dev     # back in playwright-qa-framework
-```
+![HTML report overview](docs/demo/02-html-report-overview.png)
 
-A dev build resolves its catalog from a bundled JSON module instead of calling
-Firebase, so mock-based and network-assertion tests skip themselves rather than
-fail misleadingly. See
-[architecture.md](docs/architecture.md#environment-status).
+![Suite run](docs/demo/01-suite-run.png)
 
-## Task 1 Summary
+## 9. Roadmap / known limitations
 
-Automated scenario:
+- Public demo host can change or go offline — quarantine or `page.route` mocks
+  are the intended mitigation (do not leave a red badge unexplained).
+- No real checkout/payment path on the demo app.
+- Firefox/WebKit increase CI wall time; sharding keeps PRs workable.
+- Visual regression (`toHaveScreenshot`) not in scope yet.
 
-1. Reads the expected match set from the live `products.json` (source of truth)
-2. Reads all catalog prices from the rendered UI and reconciles the two
-3. Identifies products at exactly **$10.90** and **$14.90** — currently 6, but the
-   count is derived, never hardcoded
-4. Adds every match to the cart
-5. Validates name, unit price, quantity and subtotal per line
-6. Validates total quantity and grand total (currently $73.40, computed from the
-   line data rather than asserted as a literal)
+## 10. Author & license
 
-Spec: `tests/functional/cart-price-validation.spec.ts`
+**Satyam Chouksey** — QA Automation Engineer / SDET · Bhopal, India  
+GitHub: [SatyamChouksey-88](https://github.com/SatyamChouksey-88)
 
-## CI/CD
-
-[![Playwright Tests](https://github.com/SatyamChouksey-88/playwright-qa-framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/SatyamChouksey-88/playwright-qa-framework/actions/workflows/playwright.yml)
-
-- **GitHub Actions:** `.github/workflows/playwright.yml` — sharded runs, merged HTML report
-- **Azure DevOps:** `azure-pipelines.yml` — JUnit + HTML artifacts
-- **Docker:** `docker/Dockerfile` — official Playwright image
-
-## Documentation
-
-| Document | Purpose |
-|----------|---------|
-| [exploration-notes.md](docs/exploration-notes.md) | Phase 0 DOM/network findings |
-| [test-plan.md](docs/test-plan.md) | Comprehensive test plan |
-| [test-cases.md](docs/test-cases.md) | Detailed test case catalog |
-| [architecture.md](docs/architecture.md) | Framework design |
-| [mcp-ai-workflow.md](docs/mcp-ai-workflow.md) | AI/MCP workflow evidence |
-| [defects.md](docs/defects.md) | Application defects found, with reproduction |
-| [demo/README.md](docs/demo/README.md) | Annotated walkthrough with screenshots |
-| [exploratory-charters.md](docs/exploratory-charters.md) | Exploratory testing charters |
-| [failure-analysis-example.md](docs/failure-analysis-example.md) | Worked failure analysis |
-
-## Walkthrough
-
-See [docs/demo/README.md](docs/demo/README.md) for the annotated walkthrough with
-captured screenshots of the suite run, the HTML report, and the project layout.
-
-## Playwright MCP Setup
-
-MCP (Model Context Protocol) lets an AI agent drive a real browser. The config
-below is what this project used; it is not shipped in the repo, because
-`.cursor/` is local editor config. Create `.cursor/mcp.json` yourself if you want
-it:
-
-```json
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest"]
-    }
-  }
-}
-```
-
-## License
-
-MIT — for educational / assignment use.
+MIT — see [LICENSE](LICENSE).
